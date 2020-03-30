@@ -4,20 +4,34 @@
  */
 const express = require('express');
 const bodyParser = require('body-parser');
-const Server = require('http').Server;
+https = require('https');
+const fs = require('fs');
+
+/*
+ * datas
+ */
+const games = require('./data/games.json');
+const characters = require('./data/characters.json');
+const host = require('./data/host.json');
 
 /*
  * Vars
  */
 const app = express();
-const server = Server(app);
 const port = 3001;
+const options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
 
 /*
- * datas
+ * Server
  */
-const games = require('./data/games');
-const characters = require('./data/characters');
+const server = https.createServer(options, app);
+
+server.listen(port, () => {
+  console.log(`listening on ${host.url}:${port}`);
+});
 
 /*
  * Express
@@ -27,7 +41,7 @@ app.use((request, response, next) => {
   response.header('Access-Control-Allow-Origin', '*');
   // response.header('Access-Control-Allow-Credentials', true);
   response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  response.header('Access-Control-Allow-Methods', 'GET' /*, POST, OPTIONS, PUT, DELETE*/ );
   next();
 });
 
@@ -40,8 +54,8 @@ app.get('/', (request, response) => {
       <hr/>
       <p>Routes GET :</p>
       <ul style="display: inline-block; margin-top: .2em; list-style: none;">
-        <li><a href="http://localhost:${port}/games"><code>http://localhost:${port}/games</code></a></li>
-        <li><a href="http://localhost:${port}/characters"><code>http://localhost:${port}/characters</code></a></li>
+        <li><a href="${host.url}:${port}/games"><code>${host.url}:${port}/games</code></a></li>
+        <li><a href="${host.url}:${port}/characters"><code>${host.url}:${port}/characters</code></a></li>
       </ul>
       <hr/>
     </div>
@@ -58,9 +72,3 @@ app.get('/characters', (request, response) => {
   response.send(characters);
 } );
 
-/*
- * Server
- */
-server.listen(port, () => {
-  console.log(`listening on http://localhost:${port}`);
-});
