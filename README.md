@@ -1,7 +1,9 @@
 # oFig-API-node-server
+Node.js HTTPS API server for oFig - Nintendo project
+
 ---
-Install : 
-```bash
+Install dependencies :
+```sh
 yarn
 ```
 For https :
@@ -9,13 +11,12 @@ For https :
 - rename `key.pem.dist` to `key.pem` and paste your RSA key
 
 Start with nodemon :
-```bash
+```sh
+# Listening on https://localhost:3001
 yarn start
 ```
 
-Listening : https://localhost:3001
-
 ---
 Routes :
-- `GET :` https://localhost:3001/games
-- `GET :` https://localhost:3001/characters
+- `GET` https://localhost:3001/games
+- `GET` https://localhost:3001/characters
